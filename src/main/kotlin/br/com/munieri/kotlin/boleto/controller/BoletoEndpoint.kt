@@ -7,6 +7,7 @@ import br.com.munieri.kotlin.boleto.domain.service.BoletoService
 import br.com.munieri.kotlin.boleto.domain.service.Status
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import javax.validation.Valid
 
 @RestController
@@ -30,7 +31,7 @@ class BoletoEndpoint : BoletoController {
 
         var boleto = BoletoBuilder()
                 .aBuilder()
-                .dataVencimento(dto.dataVencimento)
+                .dataVencimento(LocalDate.parse(dto.dataVencimento))
                 .nome(dto.nome)
                 .status(Status.valueOf(dto.status!!))
                 .valor(dto.valor)
@@ -44,7 +45,7 @@ class BoletoEndpoint : BoletoController {
 
         var boleto = BoletoBuilder()
                 .aBuilder()
-                .dataVencimento(dto.dataVencimento)
+                .dataVencimento(LocalDate.parse(dto.dataVencimento))
                 .nome(dto.nome)
                 .status(Status.valueOf(dto.status!!))
                 .valor(dto.valor)
