@@ -23,21 +23,19 @@ class ValidationIntegrationTest {
 
     private fun mock(): BoletoDTO {
         var dto = BoletoDTO()
-        dto.status = Status.PENDING
+        dto.status = Status.PENDING.toString()
         dto.nome = "Teste"
         dto.valor = 10.00
-        dto.dataVencimento = getLocalDate()
+        dto.dataVencimento = getLocalDate().toString()
         return dto
     }
-
-    private fun getLocalDate() = LocalDate.parse(LocalDate.now().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     @Test
     fun ifNameIsNull_nameValidationFails() {
         var dto = BoletoDTO()
-        dto.status = Status.PENDING
+        dto.status = Status.PENDING.toString()
         dto.valor = 10.00
-        dto.dataVencimento = getLocalDate()
+        dto.dataVencimento = getLocalDate().toString()
 
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), false)
@@ -47,9 +45,9 @@ class ValidationIntegrationTest {
     fun ifNameSizeLassThan3_nameValidationFails() {
         var dto = BoletoDTO()
         dto.nome = "aa"
-        dto.status = Status.PENDING
+        dto.status = Status.PENDING.toString()
         dto.valor = 10.00
-        dto.dataVencimento = getLocalDate()
+        dto.dataVencimento = getLocalDate().toString()
 
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), false)
@@ -59,9 +57,9 @@ class ValidationIntegrationTest {
     fun ifNameSizeGreaterThan25_nameValidationFails() {
         var dto = BoletoDTO()
         dto.nome = "aaaaaaaaaaaaaaaaaaaaaaaaab"
-        dto.status = Status.PENDING
+        dto.status = Status.PENDING.toString()
         dto.valor = 10.00
-        dto.dataVencimento = getLocalDate()
+        dto.dataVencimento = getLocalDate().toString()
 
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), false)
@@ -88,7 +86,7 @@ class ValidationIntegrationTest {
     @Test
     fun givenPastDate_thenValidationFaills() {
         var dto = mock()
-        dto.dataVencimento?.minusDays(1L)
+        dto.dataVencimento = getLocalDate().minusDays(1L).toString()
 
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), false)
@@ -97,13 +95,13 @@ class ValidationIntegrationTest {
     @Test(expected = DateTimeParseException::class)
     fun givenWrongDateFormat_thenValidationFaills() {
         var dto = mock()
-        dto.dataVencimento = LocalDate.parse("31-10-2018")
+        dto.dataVencimento = LocalDate.parse("31-10-2018").toString()
     }
 
     @Test
     fun givenPresentDate_thenValidationSuccess() {
         var dto = mock()
-        dto.dataVencimento = LocalDate.now()
+        dto.dataVencimento = LocalDate.now().toString()
 
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), true)
@@ -112,7 +110,9 @@ class ValidationIntegrationTest {
     @Test
     fun givenFutureDate_thenValidationSuccess() {
         var dto = mock()
-        dto.dataVencimento?.plusDays(1L)
+
+        dto.dataVencimento = getLocalDate().plusDays(1L).toString()
+
 
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), true)
@@ -126,4 +126,7 @@ class ValidationIntegrationTest {
         val violations = validator!!.validate(dto)
         assertEquals(violations.isEmpty(), false)
     }
+
+    private fun getLocalDate() = LocalDate.parse(LocalDate.now().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
 }

@@ -1,17 +1,29 @@
 package br.com.munieri.kotlin.boleto.controller
 
 import br.com.munieri.kotlin.boleto.controller.dto.BoletoDTO
+import br.com.munieri.kotlin.boleto.controller.dto.ErrorDTO
 import br.com.munieri.kotlin.boleto.domain.Boleto
 import br.com.munieri.kotlin.boleto.domain.BoletoBuilder
 import br.com.munieri.kotlin.boleto.domain.service.BoletoService
 import br.com.munieri.kotlin.boleto.domain.service.Status
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.annotation.AnnotationUtils
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.stream.Collectors
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 @RestController
 class BoletoEndpoint : BoletoController {
+
+    private val log = LoggerFactory.getLogger(BoletoEndpoint::class.java)
 
     @Autowired
     lateinit var service: BoletoService
